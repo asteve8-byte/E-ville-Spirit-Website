@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&family=Goblin+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --white: #ffffff;
+  --black: #000000;
+  --first-color: #EA9A2E;
+  --second-color: #F3C45A;
+  --base-color: #151E37;
+}
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Archivo;
+  color: var(--black);
+  font-size: 16px;
+}
+
+body {
+  padding: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: Goblin One;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.2em;
+  letter-spacing:-.02em;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  /* min: 2rem, preferred: 5% of viewport width, max: 3.5rem */
+}
+
+h2 {
+  font-size: clamp(1.5rem, 4vw, 2.8rem);
+}
+
+h3 {
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
+}
+
+h4 {
+  font-size: clamp(1rem, 2.5vw, 1.6rem);
+}
+
+p {
+  font-family: Archivo;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 1.5em;
+  letter-spacing: 0em;
+  margin-bottom: 1em;
+}
+
+.p-one { font-size: 1.4rem; }
+.p-two { font-size: 1rem; }
+.p-three { font-size: 0.9rem; }
+
+/* different types of svg dividers*/
+svg {
+  display: block; /* keep this! prevents white gaps */
+}
+
+.svg-rotated {
+  transform: rotate(180deg);
+}
+
+.svg-mirror {
+  transform: scaleX(-1);
+}
+
+.svg-flip-vertical {
+  transform: scaleY(-1);
+}
+
+nav {
+  margin: 0;
+  width: 100%;
+}
+
+nav ul {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  list-style-type: none;
+  gap: 2em;
+}
+
+nav li:first-child {
+  margin-right: auto;
+  font-family: Goblin One, Archivo;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: var(--first-color);
+}
+
+nav a {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+header, section {
+  background-color: var(--white);
+  padding: 5em;
+  text-align: center; /* default for sections */
+}
+
+/* Flex layout for columns */
+.flex-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 3em;
+}
+
+.flex-container > * {
+  flex: 1 1 48%;
+  min-width: 50px;
+  max-width: 1200px;
+}
+
+.text-container p {
+  margin: .75em 0 1em 0;
+}
+
+/* -------------------
+   Section 1 (Introduction)
+   ------------------- */
+#section1 {
+  background-color: var(--white);
+  text-align: left; /* left-align text in section */
+}
+
+#section1 h1,
+#section1 h2,
+#section1 h3,
+#section1 h4 {
+  color: var(--first-color);
+}
+
+/* -------------------
+   Sections 5 (Contact) and 6 (About)
+   ------------------- */
+#section5,
+#section6 {
+  text-align: left; /* left-align text in section */
+}
+
+#section6 h1 {
+  color: var(--first-color);
+}
+
+/* Ensure left-alignment inside flex columns */
+#section1 .flex-container,
+#section5 .flex-container,
+#section6 .flex-container {
+  justify-content: flex-start;
+}
+
+#section1 .left-col,
+#section1 .right-col,
+#section5 .left-col,
+#section5 .right-col,
+#section6 .left-col,
+#section6 .right-col {
+  text-align: left;
+}
+
+/* Responsive stacking for smaller screens */
+@media (max-width: 500px) {
+  #section1 .flex-container,
+  #section5 .flex-container,
+  #section6 .flex-container {
+    flex-direction: column;
+  }
+
+  #section1 .left-col,
+  #section1 .right-col,
+  #section5 .left-col,
+  #section5 .right-col,
+  #section6 .left-col,
+  #section6 .right-col {
+    flex: 1 1 100%;
+    margin-bottom: 1em; /* spacing between stacked columns */
+  }
+}
+
+/* -------------------
+   Section 2 (The Map)
+   ------------------- */
+#section2 {
+  background-color: var(--base-color);
+}
+
+/* -------------------
+   Section 3 (Skull and Map Explanation)
+   ------------------- */
+#section3 {
+  background-color: var(--base-color);
+}
+
+#section3 .p-one {
+  color: var(--second-color);
+}
+
+#section3 img {
+  width: 100%;
+  height: auto;
+  max-width: 500px; /* optional cap */
+}
+
+/* Section 3: stack image and text vertically */
+#section3 .flex-container {
+  flex-direction: column; /* stack items top to bottom */
+  align-items: center;    /* optional: center items horizontally */
+  gap: 2em;               /* optional: spacing between stacked items */
+}
+
+/* Optional: make each child take full width on smaller screens */
+#section3 .flex-container > * {
+  flex: 1 1 100%;
+  min-width: 0;      /* REQUIRED for flex shrinking */
+  text-align: center; /* if you want text centered in stacked layout */
+}
+
+/* -------------------
+   Section 4 (Get on the Map)
+   ------------------- */
+#section4 {
+  background-color: var(--base-color);
+  color: var(--white);
+}
+
+
+/* -------------------
+   Section 5 (Contact Us)
+   ------------------- */
+#section5 {
+  background-color: var(--second-color);
+}
+
+/* -------------------
+   Section 6 (About)
+   ------------------- */
+#section6 {
+  background-color: var(--white);
+}
+
+#section6 h1 {
+  color: var(--first-color); /* same as section1 headers */
+}
+
