@@ -52,7 +52,7 @@
 
   <!-- The Map: Section 2 -->
   <section id="section2">
-    <div></div>
+    <div id="map"></div>
   </section>
 
   <!-- Skull and Map Explanation: Section 3 -->
@@ -165,6 +165,256 @@
   <svg class="svg-flip-vertical" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100">
     <path d="M0 0v100S500 4 1000 4V0H0Z" style="fill: var(--second-color);"></path>
   </svg>
+
+
+<script>
+function initMap() {
+  const center = { lat: 38.78226392691017, lng: -89.95806558652248 };
+  const map = new google.maps.Map(document.getElementById("map"), {
+    center,
+    zoom: 13,
+    mapId: "af8e5c3cd86ea11ed08cdbff",
+    mapTypeControl: false,
+    streetViewControl: false,
+    maxZoom: 22,
+  });
+
+  const infoWindow = new google.maps.InfoWindow();
+
+  function buildSpookyInfo({ title, description = "Description goes here.", onClose }) {
+    const wrap = document.createElement("div");
+    wrap.className = "spooky-iw";
+    wrap.innerHTML = `
+      <button class="spooky-iw__close" type="button" aria-label="Close">
+        <span class="spooky-iw__close-icon">✕</span>
+      </button>
+      <div class="spooky-iw__inner">
+        <div class="spooky-iw__title">${title}</div>
+        <div class="spooky-iw__row">
+          <p class="spooky-iw__desc" style="margin:0;">${description}</p>
+        </div>
+      </div>
+    `;
+    const closeBtn = wrap.querySelector(".spooky-iw__close");
+    const close = () => { infoWindow.close(); if (typeof onClose === "function") onClose(); };
+    closeBtn.addEventListener("click", (e) => { e.stopPropagation(); close(); });
+    wrap.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    return wrap;
+  }
+
+  function hideDefaultCloseOnDomReady() {
+    google.maps.event.addListenerOnce(infoWindow, "domready", () => {
+      const btn = document.querySelector(".gm-ui-hover-effect");
+      if (btn) btn.style.display = "none";
+      const shell = document.querySelector(".gm-style-iw-c");
+      if (shell) {
+        shell.style.background = "transparent";
+        shell.style.border = "0";
+        shell.style.padding = "0";
+        shell.style.boxShadow = "none";
+      }
+    });
+  }
+
+  function createMarker([name, lat, lng, iconUrl, w, h]) {
+    return new google.maps.Marker({
+      position: { lat, lng },
+      map,
+      title: name,
+      icon: {
+        url: iconUrl,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h / 2),
+        labelOrigin: new google.maps.Point(w / 2, h / 2)
+      },
+      visible: false // Start OFF
+    });
+  }
+
+  function addDetailMarker({ title, lat, lng, iconUrl }) {
+    const w = 40, h = 40;
+    const m = new google.maps.Marker({
+      position: { lat, lng },
+      map,
+      title,
+      icon: {
+        url: iconUrl,
+        scaledSize: new google.maps.Size(w, h),
+        anchor: new google.maps.Point(w / 2, h / 2),
+        labelOrigin: new google.maps.Point(w / 2, h / 2)
+      },
+      visible: false,
+    });
+    detailMarkers.push(m);
+  }
+
+  const ROAD_ICON_WIDTH = 25;
+  function addRoadMarker(lat, lng, iconUrl) {
+    const marker = new google.maps.Marker({
+      position: { lat, lng },
+      map,
+      visible: false,
+      clickable: false,
+      zIndex: 1
+    });
+    roadsMarkers.push(marker);
+
+    const img = new Image();
+    img.onload = () => {
+      const width  = ROAD_ICON_WIDTH;
+      const height = Math.round((img.height / img.width) * width);
+      marker.setIcon({
+        url: iconUrl,
+        scaledSize: new google.maps.Size(width, height),
+        anchor: new google.maps.Point(width / 2, height / 2),
+        labelOrigin: new google.maps.Point(width / 2, height / 2)
+      });
+    };
+    img.src = iconUrl;
+  }
+
+  const groups = {
+    markers: [
+      ["Azalea Coven", 38.791584890466446, -89.96413092365108, "SkullNoBack.png", 40, 40, "Three neighbors make this cul-de-sac a must see, especially when lights are on in the evening."],
+      ["Hidden Crypt", 38.7914434, -89.9705711393093, "SkullNoBack.png", 40, 40, "This spooky (and funny) site is a neighborhood delight."],
+      ["Skeleton Crew", 38.7926265799626, -89.9681079933923, "SkullNoBack.png", 40, 40, "Five giant skeletons guard Esic."],
+      ["The Witchin' Sink", 38.7985079, -89.9657481, "SkullNoBack.png", 40, 40, "A great corner with a giant pumpkin on one side and EVERYTHING else on the other."],
+      ["Dragon Alley", 38.7936234, -89.9649488, "SkullNoBack.png", 40, 40, " Unique dragon outside plus a wild garage display for trick or treating day."],
+      ["A-maze-ing", 38.7924173, -89.9666336, "SkullNoBack.png", 40, 40, "Full front yard plus neighborhood-famous maze and displays for trick or treating day."],
+      ["Mega Spider", 38.7631288, -89.9565932, "SkullNoBack.png", 40, 40, "Drive by to see mega spider… and family."],
+      ["Monster Manor", 38.7963349052386, -89.92039878409, "SkullNoBack.png", 40, 40, "A display of monstrous proportions that gives the whole neighborhood an eerie glow."],
+      ["Graveyard Galore", 38.755147825951, -89.9969778986924, "SkullNoBack.png", 40, 40, "A delightful parfait of tombstones and skeletons with a creepy clown cherry on top."],
+      ["Burning Soul", 38.7556674633513, -89.9986938291442, "SkullNoBack.png", 40, 40, "Large ghouls lure you in with their violaceous glow."],
+      ["Perma Skelly", 38.7980521800665, -89.9419204454324, "SkullNoBack.png", 40, 40, "Rear-round skeleton that knows how to dress for the occasion."],
+      ["Don't Fear", 38.7693773152596, -89.9830736259952, "SkullNoBack.png", 40, 40, "the Reaper… he's just here for the candy, right?"],
+      ["Curse and Turf", 38.7940562153859, -89.9465111093419, "SkullNoBack.png", 40, 40, "A spooky yard display and haunted garage for trick or treating day scares."],
+      ["Run for the Hills", 38.814047707227, -89.9517744982001, "SkullNoBack.png", 40, 40, "This happy haunt is a welcoming beacon in the neighborhood."],
+      ["Oogie Boogie", 38.8175687693794, -89.947838780186, "SkullNoBack.png", 40, 40, "Nightmare Before Christmas fans rejoice and behold!"],
+      ["Tomb Service", 38.8121519528709, -89.9754136953696, "SkullNoBack.png", 40, 40, "Eerie torch-lit graveyard gives goosebumps to those who dare pass."],
+      ["Dragon Breath", 38.8120577822045, -89.9693080776496, "SkullNoBack.png", 40, 40, "Skeleton family makes mischief on the porch, protected by a fire breathing guard at the corner."],
+      ["Pint Size Terrors", 38.7935328880594, -89.9703970517058, "SkullNoBack.png", 40, 40, "I wouldn't want to mess with this gang of height-challenged trouble makers."],
+      ["Boo-F.O.", 38.791230098744, -89.9650803889502, "SkullNoBack.png", 40, 40, "Choose your fate: friendly Halloween on one side, alien abduction on the other."],
+    ],
+    roads: [
+      [38.77490366669966, -89.99224486, "157.png"],
+      [38.80259204369094, -89.9733987,  "157.png"],
+      [38.828008696948956, -89.93630265,"157.png"],
+      [38.76923617791121, -89.95661136, "159.png"],
+      [38.79954161483702, -89.95550766, "159.png"],
+      [38.81849887987027, -89.96373938, "159.png"],
+      [38.82884858163613, -89.98474238, "143.png"],
+      [38.80038406415756, -89.9127761,  "143.png"],
+      [38.7875474667992,  -89.89747716, "55.png"],
+      [38.75693291769963, -89.96809645, "270.png"],
+      [38.80483560642795, -90.04352252, "255.png"]
+    ],
+  };
+
+  // ---------- Marker Arrays ----------
+  const markers = [];
+  const detailMarkers = [];
+  const roadsMarkers = [];
+
+  // Interactive markers
+  groups.markers.forEach(item => {
+    const m = createMarker(item);
+    const [name,,,,,, desc] = item;
+    m.addListener("click", () => {
+      infoWindow.setContent(buildSpookyInfo({ title: name, description: desc }));
+      hideDefaultCloseOnDomReady();
+      infoWindow.open({ anchor: m, map, shouldFocus: false });
+    });
+    markers.push(m);
+  });
+
+  // Roads
+  groups.roads.forEach(([lat, lng, url]) => addRoadMarker(lat, lng, url));
+  function syncRoadsVisibility() {
+    const z = map.getZoom() ?? 0;
+    const show = z >= 14;
+    roadsMarkers.forEach(m => m.setVisible(show));
+  }
+  syncRoadsVisibility();
+  map.addListener("zoom_changed", syncRoadsVisibility);
+
+  // City markers (zoom-based)
+  const edwardsvilleMarker = new google.maps.Marker({
+    position: { lat: 38.81031437381295, lng: -89.95370662492188 },
+    map,
+    title: "Edwardsville",
+    icon: { url: "EdwardsvilleSignNoBack.png", scaledSize: new google.maps.Size(130, 130), anchor: new google.maps.Point(65, 65), labelOrigin: new google.maps.Point(65, 65) },
+  });
+  const glenCarbonMarker = new google.maps.Marker({
+    position: { lat: 38.748398403964465, lng: -89.98248601769215 },
+    map,
+    title: "Glen Carbon",
+    icon: { url: "GlenCarbonSignNoBack.png", scaledSize: new google.maps.Size(100, 100), anchor: new google.maps.Point(50, 50), labelOrigin: new google.maps.Point(50, 50) },
+  });
+  function syncCityMarkersVisibility() {
+    const z = map.getZoom() ?? 0;
+    edwardsvilleMarker.setVisible(z <= 13);
+    glenCarbonMarker.setVisible(z <= 13);
+  }
+  syncCityMarkersVisibility();
+  map.addListener("zoom_changed", syncCityMarkersVisibility);
+
+// Coming Back Sign (always on top of city markers)
+const comingBackMarker = new google.maps.Marker({
+  position: { lat: 38.78721584688403, lng: -89.95557569241848},
+  map,
+  title: "Coming Back Halloween 2026",
+  icon: {
+    url: "ComingBackSign_v2.png",
+    scaledSize: new google.maps.Size(650, 650),
+    anchor: new google.maps.Point(325, 325),
+    labelOrigin: new google.maps.Point(325, 325)
+  },
+  visible: true,
+  zIndex: 1000  // <-- very high so it appears above city markers
+});
+
+  // Detail markers
+  addDetailMarker({ title: "Dunlap Lake", lat: 38.80331021033391, lng: -89.93183641, iconUrl: "SeaMonsterIconNoBack.png" });
+  addDetailMarker({ title: "Tower Lake", lat: 38.80265250454397, lng: -90.0026797742921, iconUrl: "SeaMonsterIconNoBack.png" });
+  addDetailMarker({ title: "Lake Hillcrest", lat: 38.751259333580265, lng: -89.9922724542994, iconUrl: "SeaMonsterIconNoBack.png" });
+  addDetailMarker({ title: "Woodlawn Cemetery", lat: 38.810512133164224, lng: -89.9769839195565, iconUrl: "ZombieHandIconNoBack.png" });
+  addDetailMarker({ title: "Mary Orthodox Cemetery", lat: 38.759526471403774, lng: -90.0078708918044, iconUrl: "ZombieHandIconNoBack.png" });
+  addDetailMarker({ title: "Wildey Theater", lat: 38.81417289724646, lng: -89.9586162513556, iconUrl: "PhantomMaskIconNoBack.png" });
+  addDetailMarker({ title: "Edwardsville Library", lat: 38.81120831363686, lng: -89.9538344134083, iconUrl: "GhostBookIconNoBack.png" });
+  addDetailMarker({ title: "Glen Carbon Library", lat: 38.74885984401589, lng: -89.9836433980314, iconUrl: "GhostBookIconNoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.81632976044499, lng: -89.970919301078, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.828947350068795, lng: -89.94003611559596, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.802444303167114, lng: -89.96579060891158, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.786823378557926, lng: -89.9883479741944, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.778088133820944, lng: -89.9494125079868, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "MCT Trails", lat: 38.776587555223095, lng: -89.9685666491463, iconUrl: "SkellyBikeIcon_NoBack.png" });
+  addDetailMarker({ title: "Newt", lat: 38.79573139636809, lng: -89.9570394303156, iconUrl: "CatNoBack.png" });
+
+  // Function to toggle markers on/off
+  window.toggleMarkers = (show) => {
+    markers.forEach(m => m.setVisible(show));
+  };
+  window.toggleDetailMarkers = (show) => {
+    detailMarkers.forEach(m => m.setVisible(show));
+  };
+  window.toggleComingBack = (show) => {
+    comingBackMarker.setVisible(show);
+  };
+
+  // Start state
+  toggleMarkers(false);
+  toggleDetailMarkers(false);
+  toggleComingBack(true);
+}
+</script>
+
+
+  <!-- Google Maps JS (replace YOUR_API_KEY) -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsHn8lg9o65CPiWH0X_hq-4BYLh2NLZ54&callback=initMap"
+    async defer
+  ></script>
+
 
 </body>
 
