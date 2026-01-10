@@ -354,7 +354,7 @@ header, section {
 }
 
 .contact-btn:hover {
-  background: #d88722;
+  background: var(--first-color);
 }
 
 /* Mobile adjustments */
@@ -389,12 +389,66 @@ header, section {
 /* Hover effect - lighter shade of orange */
 .contact-form input:hover,
 .contact-form textarea:hover {
-  background: #f7d891;  /* lighter version of var(--second-color) */
+  background: #FFFFFF80;  /* semi-transparent white */
 }
 
-/* Optional: focus effect */
-.contact-form input:focus,
-.contact-form textarea:focus {
-  background: #fde7b0;
-  outline: 2px solid var(--first-color);
+/* -------------------
+   Google Map (Section 2)
+------------------- */
+
+#map {
+  height: 80vh;
+  width: 100%;
 }
+
+ /* InfoWindow chrome overrides */
+    .gm-style-iw-c { background: transparent !important; border: 0 !important; padding: 0 !important; border-radius: 18px !important; box-shadow: none !important; }
+    .gm-style-iw-d { overflow: visible !important; }
+    .gm-style-iw-tc::after { display: none !important; }
+    .gm-ui-hover-effect { display: none !important; }
+
+    /* Spooky InfoWindow */
+    .spooky-iw {
+      --gold:#e0a531; --gold-dark:#b68221; --navy0:#0b1320; --navy1:#0e1a2b;
+      color:var(--gold); font-family:"Trebuchet MS",system-ui,sans-serif;
+      border:4px solid var(--gold); border-radius:16px; position:relative;
+      background:
+        radial-gradient(120% 80% at 20% 20%, #101b2f 0%, transparent 55%),
+        radial-gradient(120% 80% at 80% 70%, #0a1221 0%, transparent 50%),
+        linear-gradient(180deg, var(--navy1), var(--navy0));
+      width: fit-content; max-width: 240px; min-width: 160px;
+      word-wrap: break-word; overflow-wrap: anywhere;
+      box-shadow:0 2px 0 var(--gold-dark) inset, 0 0 0 3px rgba(0,0,0,.6);
+    }
+    .spooky-iw__inner { padding: 14px 56px 16px 16px !important; }
+    .spooky-iw__title {
+      font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+      font-size:15px; line-height:1.2;
+      text-shadow:0 1px 0 #000, 0 0 12px rgba(224,165,49,.35);
+      margin:0 0 8px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .spooky-iw__row { display:flex; align-items:center; gap:10px; flex-wrap: wrap; }
+    .spooky-iw__desc { font-size:13px; line-height:1.35; opacity:.95; }
+
+    .spooky-iw__close {
+      position:absolute; top:6px; right:6px; width:26px; height:26px;
+      border:2px solid var(--gold); border-radius:8px; cursor:pointer;
+      display:grid; place-items:center; user-select:none;
+      background:
+        radial-gradient(120% 80% at 20% 20%, #101b2f 0%, transparent 55%),
+        radial-gradient(120% 80% at 80% 70%, #0a1221 0%, transparent 50%),
+        linear-gradient(180deg, var(--navy1), var(--navy0));
+      box-shadow:0 2px 0 var(--gold-dark) inset, 0 0 0 2px rgba(0,0,0,.45) inset;
+    }
+    .spooky-iw__close:hover {
+      background:
+        radial-gradient(120% 80% at 20% 20%, #14203a 0%, transparent 55%),
+        radial-gradient(120% 80% at 80% 70%, #0d1730 0%, transparent 50%),
+        linear-gradient(180deg, var(--navy1), var(--navy0));
+    }
+    .spooky-iw__close:active { transform: translateY(1px); }
+    .spooky-iw__close:focus-visible {
+      outline:none;
+      box-shadow:0 0 0 2px rgba(224,165,49,.45), 0 2px 0 var(--gold-dark) inset, 0 0 0 2px rgba(0,0,0,.45) inset;
+    }
+    .spooky-iw__close-icon { line-height:1; font-weight:800; font-size:14px; color:var(--gold); text-shadow:0 1px 0 #000; }
