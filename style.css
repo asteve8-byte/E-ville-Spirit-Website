@@ -218,6 +218,7 @@ header, section {
   #section2 {
     padding: 1em;  /* reduce padding on phones */
   }
+}
 
 /* -------------------
    Section 3 (Skull and Map Explanation)
@@ -458,4 +459,5 @@ header, section {
       box-shadow:0 0 0 2px rgba(224,165,49,.45), 0 2px 0 var(--gold-dark) inset, 0 0 0 2px rgba(0,0,0,.45) inset;
     }
     .spooky-iw__close-icon { line-height:1; font-weight:800; font-size:14px; color:var(--gold); text-shadow:0 1px 0 #000; }
+
 
