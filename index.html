@@ -182,7 +182,7 @@
       /* ---------- Single InfoWindow ---------- */
       const infoWindow = new google.maps.InfoWindow();
 
-      function buildSpookyInfo({ title, description = "Description goes here.", onClose }) {
+      function buildSpookyInfo({ title, description = "Description goes here.", lat, lng, onClose }) {
         const wrap = document.createElement("div");
         wrap.className = "spooky-iw";
         wrap.innerHTML = `
@@ -194,6 +194,7 @@
             <div class="spooky-iw__row">
               <p class="spooky-iw__desc" style="margin:0;">${description}</p>
             </div>
+            <a class="spooky-iw__directions" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${lat},${lng}`)}" target="_blank" rel="noopener noreferrer">Get Directions</a>
           </div>
         `;
         const closeBtn = wrap.querySelector(".spooky-iw__close");
@@ -292,7 +293,7 @@
           ["Z-Z-Z-Zombies", 38.7968801063791, -89.9672446000063, "SkullNoBack.png", 40, 40, "Careful-they bite!"],
           ["Leg Day", 38.7960752973414, -89.9669766285708, "SkullNoBack.png", 40, 40, "Giant spiders have overtaken this otherwise quiet bit of suburbia."],
           ["Heads Up", 38.8029076634276, -89.9621033473871, "SkullNoBack.png", 40, 40, "These ghouls clearly have some anger management issues."],
-          ["Renovation Nightmare", 38.8142143285477, -89.9509168368705, "SkullNoBack.png", 40, 40, "The spirits from this historic home have spilled out onto the lawn and they're making quite a scene."],
+          ["Reno Nightmare", 38.8142143285477, -89.9509168368705, "SkullNoBack.png", 40, 40, "The spirits from this historic home have spilled out onto the lawn and they're making quite a scene."],
           ["All the Things", 38.7917294157134, -89.9666412235565, "SkullNoBack.png", 40, 40, "They say you can't have it all, but this house respectfully disagrees."],
           ["Azalea Coven", 38.7915834629338, -89.9640945251563, "SkullNoBack.png", 40, 40, "Three neighbors make this cul-de-sac a must see, especially when the lights are on in the evening."],
           ["Dragon Alley", 38.7936234213501, -89.9649488297797, "SkullNoBack.png", 40, 40, "Unique dragon outside plus a wild garage display for trick or treating day."],
@@ -327,10 +328,10 @@
       // Markers (interactive)
       groups.markers.forEach(item => {
         const m = createMarker(item);
-        const [name,,,,,, desc] = item;
+        const [name, lat, lng,,,, desc] = item;
         m.addListener("click", () => {
           infoWindow.setContent(
-            buildSpookyInfo({ title: name, description: desc || "Description goes here.", onClose: null })
+            buildSpookyInfo({ title: name, description: desc || "Description goes here.", lat, lng, onClose: null })
           );
           hideDefaultCloseOnDomReady();
           infoWindow.open({ anchor: m, map, shouldFocus: false });
