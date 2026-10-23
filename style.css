@@ -213,13 +213,6 @@ header, section {
   background-color: var(--base-color);
 }
 
-/* Mobile override */
-@media (max-width: 768px) {
-  #section2 {
-    padding: 1em;  /* reduce padding on phones */
-  }
-}
-
 /* -------------------
    Section 3 (Skull and Map Explanation)
    ------------------- */
@@ -459,5 +452,23 @@ header, section {
       box-shadow:0 0 0 2px rgba(224,165,49,.45), 0 2px 0 var(--gold-dark) inset, 0 0 0 2px rgba(0,0,0,.45) inset;
     }
     .spooky-iw__close-icon { line-height:1; font-weight:800; font-size:14px; color:var(--gold); text-shadow:0 1px 0 #000; }
-
-
+/* Get Directions link inside Golden Skull popups */
+.spooky-iw__directions {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 8px 12px;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+  background: var(--navy1);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 800;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.spooky-iw__directions:hover,
+.spooky-iw__directions:focus-visible {
+  background: #14203a;
+  color: var(--gold);
+}
